@@ -98,6 +98,7 @@ configure_file(
   output: meson.project_name(),
   configuration: {
     'PYTHON': python.full_path(),
+    'LAYER_SHELL_PREFIX': layer_shell.get_variable('prefix'),
     'PKGDATADIR': pkgdatadir,
   },
   install: true,

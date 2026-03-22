@@ -61,8 +61,8 @@ class Launcher(Astal.Window):
         while row := self._list.get_row_at_index(0):
             self._list.remove(row)
 
-        # Add new rows (limit to 12 results)
-        for app in self._apps_service.search(query)[:12]:
+        # Add new rows (show all matched results)
+        for app in self._apps_service.search(query):
             self._list.append(self._app_row_cls(app))
 
         # Auto-select the first result
@@ -83,6 +83,31 @@ class Launcher(Astal.Window):
         """Focus the search entry (used with GLib.timeout_add)."""
         self._entry.grab_focus()
         return False  # run once
+
+    def _ensure_row_visible(self, row):
+        """Scroll the list so the given row is visible in the viewport."""
+        if row is None:
+            return
+
+        success, bounds = row.compute_bounds(self._list)
+        if not success:
+            return
+
+        scroller = self._list.get_ancestor(Gtk.ScrolledWindow)
+        if scroller is None:
+            return
+
+        vadj = scroller.get_vadjustment()
+        visible_top = vadj.get_value()
+        visible_bottom = visible_top + vadj.get_page_size()
+
+        row_top = bounds.get_y()
+        row_bottom = row_top + bounds.get_height()
+
+        if row_top < visible_top:
+            vadj.set_value(row_top)
+        elif row_bottom > visible_bottom:
+            vadj.set_value(row_bottom - vadj.get_page_size())
 
     # ── Signal Handlers ───────────────────────────────────────────────────────
 
@@ -129,6 +154,7 @@ class Launcher(Astal.Window):
                 idx = selected.get_index() + 1
                 if next_row := self._list.get_row_at_index(idx):
                     self._list.select_row(next_row)
+                    self._ensure_row_visible(next_row)
             return True
         elif keyval == Gdk.KEY_Up:
             selected = self._list.get_selected_row()
@@ -136,6 +162,7 @@ class Launcher(Astal.Window):
                 idx = selected.get_index() - 1
                 if idx >= 0 and (prev_row := self._list.get_row_at_index(idx)):
                     self._list.select_row(prev_row)
+                    self._ensure_row_visible(prev_row)
             return True
         return False
 

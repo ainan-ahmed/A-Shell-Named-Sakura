@@ -7,6 +7,7 @@ requires-python = ">=3.10"
 dependencies = [
     "PyGObject>=3.42.0",
     "libsass>=0.22.0",
+    "rust-just",
 ]
 [tool.pyright]
 typeCheckingMode = "off"

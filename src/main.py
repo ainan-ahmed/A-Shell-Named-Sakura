@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-"""Entry point for the GTK app launcher application."""
-
 import os
 import sys
 from ctypes import CDLL
 
 import gi
 
-# Running from XWayland terminals (for example VS Code) can make GTK pick X11,
-# which disables gtk4-layer-shell. Prefer Wayland when it is available.
 if os.environ.get("WAYLAND_DISPLAY"):
     os.environ.setdefault("GDK_BACKEND", "wayland")
 
