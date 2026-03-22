@@ -1,0 +1,88 @@
+/* ═══════════════════════════════════════════════════════════════
+   GTK App Launcher — Native GNOME (Adwaita) Theme
+   ═══════════════════════════════════════════════════════════════ */
+
+$border-radius: 12px;
+$inner-radius: 8px;
+
+/* ── Window + overlay: fully transparent background ────────── */
+window,
+.launcher-overlay {
+    background: none;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* ── Centered launcher panel ─────────────────────────────────── */
+.launcher-inner {
+    /* Uses standard GTK window background color */
+    background-color: \@window_bg_color;
+    border: 1px solid \@borders;
+    border-radius: $border-radius;
+    padding: 0;
+    min-width: 520px;
+    
+    /* Standard GNOME drop shadow for floating elements */
+    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1), 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+
+    /* ── Search bar ──────────────────────────────────────────────── */
+    .launcher-search {
+        font-size: 16px;
+        padding: 14px 16px;
+        margin: 0;
+        border: none;
+        border-bottom: 1px solid \@borders;
+        border-radius: $border-radius $border-radius 0 0;
+        background-color: \@window_bg_color;
+        
+        /* Inherit text color from system */
+        color: \@window_fg_color;
+        caret-color: \@accent_color;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        text {
+            color: \@window_fg_color;
+        }
+    }
+
+    /* ── App list container ─────────────────────────────────────── */
+    .launcher-list {
+        background-color: \@view_bg_color;
+        padding: 6px;
+        border-radius: 0 0 $border-radius $border-radius;
+
+        /* ── Individual app row ─────────────────────────────────────── */
+        .app-row {
+            padding: 10px 12px;
+            /* GTK/Adwaita handles rounding on selected items nicely */
+            border-radius: $inner-radius;
+            margin: 1px 0;
+
+            .app-icon {
+                /* No opacity dimming for native look */
+                margin-right: 6px;
+            }
+
+            /* ── App name label ─────────────────────────────────────────── */
+            .app-name {
+                font-size: 14px;
+                font-weight: bold;
+                color: \@window_fg_color;
+            }
+
+            /* ── App description label ──────────────────────────────────── */
+            .app-desc {
+                font-size: 12px;
+                /* Note: We can't use SCSS mix() with GTK @variables directly
+                   because SCSS resolves mix() at compile time but GTK variables
+                   are resolved at runtime. We use opacity instead. */
+                color: \@window_fg_color;
+                opacity: 0.6;
+            }
+        }
+    }
+}

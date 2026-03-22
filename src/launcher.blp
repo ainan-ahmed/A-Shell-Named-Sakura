@@ -1,0 +1,54 @@
+using Gtk 4.0;
+using Astal 4.0;
+
+template $Launcher : Astal.Window {
+  namespace: "launcher";
+  layer: overlay;
+  exclusivity: ignore;
+  keymode: exclusive;
+  visible: false;
+  
+  // Anchor to all 4 corners for the full screen overlay
+  anchor: top | bottom | left | right;
+
+  Gtk.Overlay {
+    Gtk.Box {
+      hexpand: true;
+      vexpand: true;
+      css-classes: ["launcher-overlay"];
+      
+      Gtk.GestureClick {
+        pressed => $_on_overlay_click();
+      }
+    }
+
+    [overlay]
+    Gtk.Box {
+      orientation: vertical;
+      halign: center;
+      valign: center;
+      css-classes: ["launcher-inner"];
+
+      Gtk.SearchEntry _entry {
+        placeholder-text: "Search apps…";
+        css-classes: ["launcher-search"];
+      }
+
+      Gtk.ScrolledWindow {
+        max-content-height: 480;
+        propagate-natural-height: true;
+        hscrollbar-policy: never;
+
+        Gtk.ListBox _list {
+          css-classes: ["launcher-list"];
+          selection-mode: single;
+        }
+      }
+    }
+  }
+
+  Gtk.EventControllerKey {
+    propagation-phase: capture;
+    key-pressed => $_on_key_pressed();
+  }
+}

@@ -1,0 +1,15 @@
+[project]
+name = "gtk-app-launcher"
+version = "0.1.0"
+description = "A simple GTK4 app launcher using PyGObject and Astal"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "PyGObject>=3.42.0",
+    "libsass>=0.22.0",
+]
+[tool.pyright]
+typeCheckingMode = "off"
+ignore = ["*"]
+[project.scripts]
+gtk-app-launcher = "src.main:main"

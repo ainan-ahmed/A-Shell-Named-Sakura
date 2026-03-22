@@ -1,0 +1,30 @@
+using Gtk 4.0;
+
+template $AppRow : Gtk.ListBoxRow {
+  Gtk.Box {
+    orientation: horizontal;
+    spacing: 12;
+    css-classes: ["app-row"];
+
+    Gtk.Image _icon {
+      pixel-size: 32;
+      css-classes: ["app-icon"];
+    }
+
+    Gtk.Box {
+      orientation: vertical;
+      spacing: 2;
+
+      Gtk.Label _name_label {
+        halign: start;
+        css-classes: ["app-name"];
+      }
+
+      Gtk.Label _desc_label {
+        halign: start;
+        css-classes: ["app-desc"];
+        ellipsize: end;
+      }
+    }
+  }
+}
