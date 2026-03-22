@@ -19,8 +19,8 @@ endif
 layer_shell = dependency('gtk4-layer-shell-0')
 
 blueprint_sources = files(
-  'src/launcher.blp',
-  'src/app_row.blp',
+  'src/ui/launcher.blp',
+  'src/ui/app_row.blp',
 )
 
 # Compile blueprints
@@ -32,7 +32,7 @@ ui = custom_target(
     blp,
     'batch-compile',
     '@OUTPUT@',
-    '@CURRENT_SOURCE_DIR@/src',
+    '@CURRENT_SOURCE_DIR@/src/ui',
     '@INPUT@',
   ],
 )
