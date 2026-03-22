@@ -1,18 +1,30 @@
-# GTK App Launcher
+# A Shell Named Sakura (GTK App Launcher)
 
-A simple GTK4 application using PyGObject and Astal.
+A GTK4 application launcher built with PyGObject, Astal, and gtk4-layer-shell.
+The UI is authored in Blueprint and packaged into a GResource bundle, with SCSS
+compiled to CSS during the build step.
 
 ## Project Structure
 
 ```
-gtk_app_launcher/
+A-Shell-Named-Sakura/
+├── build_scripts/          # SCSS compiler helper
+├── data/                   # Desktop entry and bundled assets
 ├── src/
-│   ├── __init__.py
-│   └── main.py          # Main application code
-├── main.py              # Legacy entry point (can be removed)
-├── pyproject.toml       # Project configuration
-├── requirements.txt     # Python dependencies
-└── README.md           # This file
+│   ├── main.py             # Application entry point
+│   ├── app.gresource.xml   # Resource manifest
+│   ├── launcher.blp        # Blueprint template
+│   ├── app_row.blp         # Blueprint template
+│   ├── style.scss          # App styling
+│   ├── services/           # App search + data services
+│   ├── utils/              # Resource loading helpers
+│   ├── widgets/            # Reusable UI widgets
+│   └── windows/            # Top-level launcher window
+├── meson.build             # Build configuration
+├── pyproject.toml          # Project configuration
+├── uv.lock                 # Locked Python dependencies
+├── INSTALL.md              # System install + shortcut setup
+└── README.md               # This file
 ```
 
 ## Dependencies
@@ -23,6 +35,9 @@ You need to install these system packages:
 - Python 3.10+
 - GTK4
 - PyGObject
+- gtk4-layer-shell (for layer-shell integration)
+- blueprint-compiler (for Blueprint UI compilation)
+- meson + ninja (for building GResource bundles)
 - Astal libraries:
   - astal4
   - astal-battery (optional)
@@ -32,6 +47,9 @@ You need to install these system packages:
   - astal-powerprofiles (optional)
   - astal-tray (optional)
   - astal-bluetooth (optional)
+
+Package names vary by distro, but ensure gtk4-layer-shell, blueprint-compiler,
+meson, and ninja are installed alongside GTK4 and PyGObject.
 
 #### Install on Arch Linux
 ```bash
@@ -57,8 +75,10 @@ sudo apt install python3 python3-gi gtk4
 # Activate the virtual environment
 source .venv/bin/activate
 
-# Install any additional Python dependencies
-pip install -r requirements.txt
+# Install Python dependencies declared in pyproject.toml
+pip install -e .
+# Or with uv:
+uv pip install -e .
 ```
 
 #### Why system-site-packages?
@@ -67,12 +87,24 @@ PyGObject and GTK4 bindings are typically installed system-wide via your package
 #### Alternative: Direct Installation (Not Recommended)
 ```bash
 # This will NOT work for PyGObject - it needs system libraries
-pip install -r requirements.txt
+pip install -e .
+```
+
+## Build Resources (Required for Development)
+
+The app loads UI/CSS from a compiled GResource bundle. Generate it once before
+running in development mode:
+
+```bash
+meson setup build --prefix=/usr/local
+meson compile -C build
 ```
 
 ## Running the Application
 
 ### Development Mode
+Make sure you have built resources (see above), then run:
+
 ```bash
 python -m src.main
 ```
@@ -84,8 +116,11 @@ python src/main.py
 ```
 
 ### Install and Run
+For system-wide install and shortcut setup, see [INSTALL.md](INSTALL.md).
+
+If you have installed the package in editable mode, you can also run:
+
 ```bash
-pip install -e .
 gtk-app-launcher
 ```
 
